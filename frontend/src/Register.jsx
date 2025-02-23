@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect} from "react";
+import { useRef, useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -38,8 +38,6 @@ const Register = () => {
     setValidPwd(result);
     const match = pwd === matchPwd;
     setValidMatch(match);
-    console.log(validMatch);
-    console.log(matchPwd);
   }, [pwd, matchPwd]);
 
   useEffect(() => {
@@ -53,12 +51,12 @@ const Register = () => {
         <form>
           <p ref={errRef} className={errMsg ? "text-red-500" : "hidden"} aria-live="assertive">{errMsg}</p>
           
-          <div className="relative z-0 w-full mb-5 group">
+          <div className={`relative z-0 w-full mb-3 group ${validName ? 'border-b-2 border-green-500' : user && !validName ? 'border-b-2 border-red-500' : 'border-b-2 border-gray-300'}`}>
             <input 
               type="text" 
               name="floating_username" 
               id="floating_username" 
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
+              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent appearance-none focus:outline-none focus:ring-0 peer" 
               placeholder=" " 
               required 
               ref={userRef} 
@@ -70,26 +68,20 @@ const Register = () => {
             <label htmlFor="floating_username" className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Username
             </label>
-            <span className={validName ? "text-green-500 ml-2 absolute right-0 top-1/2 transform -translate-y-1/2" : "hidden"}>
-              <FontAwesomeIcon icon={faCheck}/>
-            </span>
-            <span className={validName || !user ? "hidden" : "text-red-500 ml-2 absolute right-0 top-1/2 transform -translate-y-1/2"}>
-              <FontAwesomeIcon icon={faTimes}/>
-            </span>
-            <p id="uidnote" className={userFocus && user && !validName ? "text-gray-500 text-sm mt-2" : "hidden"}>   
+          </div>
+          <p id="uidnote" className={userFocus && user && !validName ? "text-gray-500 text-sm mt-2" : "hidden"}>   
               <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
               4 to 24 characters.<br />
               Must begin with a letter.<br />
               Letters, numbers, underscores, hyphens allowed.
-            </p>
-          </div>
+          </p>
 
-          <div className="relative z-0 w-full mb-5 group">
+          <div className={`relative z-0 w-full mb-3 group ${validPwd ? 'border-b-2 border-green-500' : pwd && !validPwd ? 'border-b-2 border-red-500' : 'border-b-2 border-gray-300'}`}>
             <input 
               type="password" 
               name="floating_password" 
               id="floating_password" 
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
+              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent appearance-none focus:outline-none focus:ring-0 peer" 
               placeholder=" " 
               required 
               autoComplete="off" 
@@ -100,26 +92,20 @@ const Register = () => {
             <label htmlFor="floating_password" className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Password
             </label>
-            <span className={validPwd ? "text-green-500 ml-2 absolute right-0 top-1/2 transform -translate-y-1/2" : "hidden"}>
-              <FontAwesomeIcon icon={faCheck}/>
-            </span>
-            <span className={validPwd || !pwd ? "hidden" : "text-red-500 ml-2 absolute right-0 top-1/2 transform -translate-y-1/2"}>
-              <FontAwesomeIcon icon={faTimes}/>
-            </span>
-            <p className={pwdFocus && !validPwd ? "text-gray-500 text-sm mt-2" : "hidden"}> 
+          </div>
+          <p className={pwdFocus && !validPwd ? "text-gray-500 text-sm mt-2" : "hidden"}> 
               <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />  
               8 to 24 characters.<br />
               Must include uppercase and lowercase letters, a number and a special character.<br />
               Allowed special characters: <span>!</span> <span>@</span> <span>#</span> <span>$</span> <span aria-label="percent">%</span>
-            </p>
-          </div>
+          </p>
 
-          <div className="relative z-0 w-full mb-5 group">
+          <div className={`relative z-0 w-full mb-3 group ${validMatch && matchPwd ? 'border-b-2 border-green-500' : matchPwd && !validMatch ? 'border-b-2 border-red-500' : 'border-b-2 border-gray-300'}`}>
             <input 
               type="password" 
               name="floating_repeat_password" 
               id="floating_repeat_password" 
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
+              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent appearance-none focus:outline-none focus:ring-0 peer" 
               placeholder=" " 
               required 
               autoComplete="off" 
@@ -130,21 +116,15 @@ const Register = () => {
             <label htmlFor="floating_repeat_password" className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Confirm Password
             </label>
-            <span className={validMatch && matchPwd ? "text-green-500 ml-2 absolute right-0 top-1/2 transform -translate-y-1/2" : "hidden"}>
-              <FontAwesomeIcon icon={faCheck}/>
-            </span>
-            <span className={validMatch || !matchPwd ? "hidden" : "text-red-500 ml-2 absolute right-0 top-1/2 transform -translate-y-1/2"}>
-              <FontAwesomeIcon icon={faTimes}/>
-            </span>
-            <p className={matchFocus && !validMatch ? "text-gray-500 text-sm mt-2" : "hidden"}> 
+          </div>
+          <p className={matchFocus && !validMatch ? "text-gray-500 text-sm mt-2" : "hidden"}> 
               <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />  
               Must match password above.
-            </p>
-          </div>
+          </p>
 
           <button 
             type="submit" 
-            className={`text-white font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ${!validName || !validPwd || !validMatch ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300'}`} 
+            className={`text-white font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mt-3 ${!validName || !validPwd || !validMatch ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300'}`} 
             disabled={!validName || !validPwd || !validMatch}
           >
             Submit
@@ -155,4 +135,4 @@ const Register = () => {
   );
 };
 
-export default Register;  
+export default Register;
