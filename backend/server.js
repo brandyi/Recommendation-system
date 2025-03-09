@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import corsOptions from './config/corsOptions.js';
 import registerRouter from './routes/register.js';
+import loginRouter from './routes/auth.js';
 
 const app = express();
 const port = 3000;
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/register', registerRouter);
+app.use('/auth', loginRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
