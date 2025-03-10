@@ -1,16 +1,6 @@
 import bcrypt from 'bcrypt';
-import pg from 'pg';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const pool = new pg.Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
+import jwt from 'jsonwebtoken';
+import pool from '../config/dbConn.js';
 
 const handleLogin = async (req, res) => {
   const { user, pwd } = req.body;
@@ -26,10 +16,18 @@ const handleLogin = async (req, res) => {
     const match = await bcrypt.compare(pwd, foundUser.rows[0].password);
     if (match) {
       //create JWTs
-      return res.status(200).json({ success: `User ${user} logged in successfully` });
+      const accessToken = jwt.sign({ user: user }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+      const refreshToken = jwt.sign({ user: user }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+
+      //store refresh token in db
+      const updateQuery = 'UPDATE users SET refresh_token = $1 WHERE username = $2';
+      await pool.query(updateQuery, [refreshToken, user]);
+
+      res.cookie('jwt', refreshToken, { httpOnly: true, sameSite:'None', secure: true , maxAge: 24*60*60*1000 });
+      res.json({ accessToken });
     }
     else{
-      return res.sendStatus(401);
+      res.sendStatus(401);
     }
   }
   catch (error) {
