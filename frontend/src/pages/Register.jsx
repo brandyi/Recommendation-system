@@ -5,7 +5,8 @@ import {
   faEye,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
-import axios from "./api/axios.js";
+import axios from "../api/axios.js";
+import { Link } from "react-router-dom";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PASS_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -65,10 +66,14 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post("/register", JSON.stringify({ user, pwd }), {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        "/register",
+        JSON.stringify({ user, pwd }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
       setSuccess(true);
     } catch (err) {
       if (!err?.response) {
@@ -99,12 +104,10 @@ const Register = () => {
       ) : (
         <section className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-gray-100">
           <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-            <div className={errMsg ? "border-2 border-red-500 p-4 mb-4" : "hidden"}>
-              <p
-                ref={errRef}
-                className="text-red-500"
-                aria-live="assertive"
-              >
+            <div
+              className={errMsg ? "border-2 border-red-500 p-4 mb-4" : "hidden"}
+            >
+              <p ref={errRef} className="text-red-500" aria-live="assertive">
                 {errMsg}
               </p>
             </div>
@@ -267,9 +270,9 @@ const Register = () => {
             </form>
             <p className="text-gray-700 mt-4">
               Already registered?{" "}
-              <a href="/signin" className="text-blue-600 hover:underline">
+              <Link to="/" className="text-blue-600 hover:underline">
                 Sign in
-              </a>
+              </Link>
             </p>
           </div>
         </section>
