@@ -1,3 +1,4 @@
+import credentials from '../middleware/credentials.js';
 import allowedOrigins from './allowedOrigins.js';
 
 const corsOptions = {
@@ -7,7 +8,8 @@ const corsOptions = {
     } else {
       callback(new Error('Not allowed by CORS'))
     }
-  }
+  },
+  credentials: true
 }
 
 export default corsOptions;
