@@ -19,7 +19,7 @@ const handleLogout = async (req, res) => {
     
     const updateQuery = 'UPDATE users SET refresh_token = NULL WHERE refresh_token = $1';
     await pool.query(updateQuery, [refreshToken]);
-    res.clearCookie('jwt', { httpOnly: true, sameSite:true, secure:true}); //secure: true - only servers https
+    res.clearCookie('jwt', { httpOnly: true, sameSite:true, secure:true}); 
     res.sendStatus(204);
   }
   catch (error) {
