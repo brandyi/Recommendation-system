@@ -95,9 +95,9 @@ const Register = () => {
               You have successfully been registered with name {user}!
             </h1>
             <p>
-              <a href="/signin" className="text-blue-600 hover:underline">
-                Sign in
-              </a>
+              <Link to="/login" className="text-blue-600 hover:underline">
+                Login
+              </Link>
             </p>
           </div>
         </section>

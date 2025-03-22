@@ -3,13 +3,18 @@ import axios from "../api/axios.js";
 import AuthContext from "../context/authProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation, replace } from "react-router-dom";
 
 const Login = () => {
   const { setAuth } = useContext(AuthContext);
 
   const userRef = useRef();
   const errRef = useRef();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from.pathname || "/survey";
+
 
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
@@ -40,6 +45,7 @@ const Login = () => {
       setAuth({ user, pwd, accessToken });
       setUser("");
       setPwd("");
+      navigate(from, {replace: true});
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No server response.");
