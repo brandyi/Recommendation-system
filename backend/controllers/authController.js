@@ -16,8 +16,8 @@ const handleLogin = async (req, res) => {
     const match = await bcrypt.compare(pwd, foundUser.rows[0].password);
     if (match) {
       //create JWTs
-      const accessToken = jwt.sign({ user: user }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-      const refreshToken = jwt.sign({ user: user }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+      const accessToken = jwt.sign({ user: user, userId: foundUser.rows[0].id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+      const refreshToken = jwt.sign({ user: user, userId: foundUser.rows[0].id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
 
       //store refresh token in db
       const updateQuery = 'UPDATE users SET refresh_token = $1 WHERE username = $2';

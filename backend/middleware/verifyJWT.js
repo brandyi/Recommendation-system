@@ -1,7 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-
-
 const verifyJWT = (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
   if(!authHeader?.startsWith('Bearer ')) {
@@ -14,6 +12,7 @@ const verifyJWT = (req, res, next) => {
       return res.sendStatus(403);
     }
     req.user = decoded.user;
+    req.userId = decoded.userId;
     next();
   });
 };
