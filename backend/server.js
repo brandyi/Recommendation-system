@@ -8,6 +8,7 @@ import verifyJWT from './middleware/verifyJWT.js';
 import refreshRouter from './routes/refresh.js';
 import logoutRouter from './routes/logout.js';
 import credentials from './middleware/credentials.js';
+import answersRouter from './routes/answers.js';
 
 
 const app = express();
@@ -23,7 +24,9 @@ app.use('/register', registerRouter);
 app.use('/auth', loginRouter);
 app.use('/refresh', refreshRouter);
 app.use('/logout', logoutRouter);
+
 app.use(verifyJWT);
+app.use('/answers', answersRouter);
 
 
 app.listen(port, () => {
