@@ -1,4 +1,3 @@
-import credentials from '../middleware/credentials.js';
 import allowedOrigins from './allowedOrigins.js';
 
 const corsOptions = {
