@@ -13,14 +13,8 @@ const useQuestions = () => {
       },
       {
         id: 2,
-        text: "What is your preferred movie length?",
-        options: ["Less than 90 minutes", "90-120 minutes", "Over 120 minutes"],
-        multiple: false,
-      },
-      {
-        id: 3,
         text: "Which decades of movies do you enjoy the most?",
-        options: ["before 1990s", "1990s", "2000s", "2010s", "2020s"],
+        options: ["before 1990s", "1990s", "2000s", "2010s"],
         multiple: false,
       },
     ];
