@@ -57,7 +57,6 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if button enabled with JS hack
     const v1 = USER_REGEX.test(user);
     const v2 = PASS_REGEX.test(pwd);
     if (!v1 || !v2) {
