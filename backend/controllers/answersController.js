@@ -1,6 +1,6 @@
 import pool from '../config/dbConn.js';
 
-const handleAnswers = async (req, res) => {
+export const handleAnswers = async (req, res) => {
   const answers = req.body.answers;
   const userId = req.userId;
   if (!answers) {
@@ -22,4 +22,21 @@ const handleAnswers = async (req, res) => {
   }
 };
 
-export default handleAnswers;
+export const checkAnswers = async (req, res) => {
+  const userId = req.userId;
+  try{
+    const queryUPS = "SELECT * FROM userpreferences WHERE userid = $1";
+    const userPreferencesSurvey = await pool.query(queryUPS, [userId]);
+    const filledSurvey = userPreferencesSurvey.rowCount > 0;
+
+    const queryUPR = "SELECT * FROM user_survey_ratings WHERE userid = $1";
+    const userPreferencesRatings = await pool.query(queryUPR, [userId]);
+    const filledRatings = userPreferencesRatings.rowCount > 0;
+
+    const filled = {filledSurvey, filledRatings};
+
+    res.status(200).json(filled);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching answers." });
+  }
+};

@@ -1,7 +1,7 @@
 import express from 'express';
-import  handleAnswers  from '../controllers/answersController.js';
+import  {handleAnswers, checkAnswers}  from '../controllers/answersController.js';
 const router = express.Router();
 
-router.post('/', handleAnswers);
+router.route('/').post(handleAnswers).get(checkAnswers);
 
 export default router;
