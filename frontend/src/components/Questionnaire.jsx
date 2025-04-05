@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useQuestions from "../hooks/useQuestions";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -12,13 +12,39 @@ const Questionnaire = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  useEffect(() => {
+    const controller = new AbortController();
+    const getAnswers = async () => {
+      try {
+        const response = await axiosPrivate.get("/answers", {
+          signal: controller.signal,
+        });
+        const { filledSurvey: survey, filledRatings: ratings } = response.data;
+        if (survey && !ratings) {
+          navigate("/survey/film-rating", { replace: true });
+        } else if (survey && ratings) {
+          navigate("/generate", { replace: true });
+        }
+      } catch (err) {
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          navigate("/login", { state: { from: location }, replace: true });
+        }
+      }
+    };
+    getAnswers();
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
   const handleSubmit = async () => {
     const controller = new AbortController();
 
     try {
       const response = await axiosPrivate.post(
         "/answers",
-        {answers: answers},
+        { answers: answers },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -26,7 +52,7 @@ const Questionnaire = () => {
         }
       );
       setError(null);
-      navigate("/survey/film-rating",  {replace: true });
+      navigate("/survey/film-rating", { replace: true });
     } catch (err) {
       console.log(err.status);
       if (err.response?.status === 401 || err.response?.status === 403) {
