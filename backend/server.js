@@ -9,6 +9,10 @@ import refreshRouter from './routes/refresh.js';
 import logoutRouter from './routes/logout.js';
 import credentials from './middleware/credentials.js';
 import answersRouter from './routes/answers.js';
+import moviesRouter from './routes/movies.js';
+import recommendationRouter from './routes/recommendation.js';
+import feedbackRouter from './routes/feedback.js'; // Import the feedback router
+
 
 
 const app = express();
@@ -27,6 +31,9 @@ app.use('/logout', logoutRouter);
 
 app.use(verifyJWT);
 app.use('/answers', answersRouter);
+app.use("/movies", moviesRouter);
+app.use("/recommendations", recommendationRouter);
+app.use('/feedback', feedbackRouter); 
 
 
 app.listen(port, () => {
