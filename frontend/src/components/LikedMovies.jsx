@@ -85,7 +85,6 @@ const LikedMovies = () => {
             >
               <div>
                 <h3 className="text-lg font-semibold text-gray-800">{movie.title}</h3>
-                <p className="text-sm text-gray-600">{movie.year}</p>
               </div>
               
               <button 
