@@ -19,8 +19,8 @@ const MovieCard = ({ movie, onLike }) => {
       : movie.genres || [];
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-xl w-5/6 mx-auto h-4/5">
-      <div className="h-64 bg-gray-200 flex flex-col items-center justify-center text-gray-500">
+    <div className="bg-white rounded-lg overflow-hidden shadow-xl mx-auto h-4/5">
+      <div className="h-64 bg-gray-200 flex flex-col items-center justify-center text-center text-gray-500">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-16 w-16 mb-2"
