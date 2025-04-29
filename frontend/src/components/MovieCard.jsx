@@ -2,7 +2,7 @@ import { useState, useEffect} from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import axios from "../api/axios";
 
-API_KEY = import.meta.env.TMDB_API_KEY
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY
 
 const MovieCard = ({ movie, onLike }) => {
   const [liked, setLiked] = useState(movie.isLiked || false);
