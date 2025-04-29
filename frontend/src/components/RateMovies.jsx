@@ -72,6 +72,7 @@ const RateMovies = () => {
       await axiosPrivate.post("/movies/rate", {
         ratings: ratedMovies,
       });
+      await axiosPrivate.delete("/movies/delete-temp");
       navigate("/generate", { replace: true });
     } catch (err) {
       console.error("Error submitting ratings:", err);
@@ -86,28 +87,28 @@ const RateMovies = () => {
           {movies.map((movie) => (
             <li
               key={movie.movieid}
-              className="flex justify-between items-center p-4 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200"
+              className="flex flex-col md:flex-row md:justify-between gap-4 md:items-center p-4 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200"
             >
               <div>
                 <h2 className="text-lg font-semibold text-gray-800">
                   {movie.title}
                 </h2>
                 <p className="text-sm text-gray-600">{movie.genres}</p>
-                <span className={`text-xs px-2 py-1 rounded-full ${movie.source === 'preference' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
-                  {movie.source === 'preference' ? 'Based on preferences' : 'Random pick'}
+                <span className={`text-xs px-2 py-1 rounded-full ${movie.source === 'preference' ? 'bg-blue-100 text-blue-800' : 'bg-gray-300 text-gray-800'}`}>
+                  {movie.source === 'preference' ? 'Založené na tvojich preferenciách' : 'Náhodný výber'}
                 </span>
               </div>
 
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:space-x-4 mt-3 md:mt-0">
                 <StarRating
                   totalStars={5}
                   onRatingChange={(ratingValue) =>
                     handleMovieRating(movie.movieid, ratingValue)
                   }
-                ></StarRating>
+                />
                 <button
                   onClick={() => handleChange(movie.movieid, movie.source)}
-                  className="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-4 py-2"
+                  className="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-4 py-2 w-full sm:w-auto"
                 >
                   Zmeň film
                 </button>

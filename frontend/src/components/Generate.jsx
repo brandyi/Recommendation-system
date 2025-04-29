@@ -24,6 +24,8 @@ const Generate = () => {
       navigate("/login");
       return;
     } 
+
+    
     
     // Check if user has already voted
     if (localStorage.getItem(`${auth.user}_has_voted`) === 'true') {
