@@ -33,19 +33,19 @@ const Navbar = () => {
                   to="/generate"
                   className="block px-4 py-2 hover:bg-gray-100 rounded-t-lg"
                 >
-                  Generate
+                  Generuj
                 </Link>
                 <Link
                   to="/liked-movies"
                   className="block px-4 py-2 hover:bg-gray-100 rounded-t-lg"
                 >
-                  Liked Movies
+                  Obľúbené filmy
                 </Link>
                 <button
                   onClick={handleLogout}
                   className="block w-full text-left px-4 py-2 hover:bg-gray-100 rounded-b-lg"
                 >
-                  Logout
+                  Odhlásiť sa
                 </button>
               </div>
             </div>
@@ -55,13 +55,13 @@ const Navbar = () => {
                 to="/login"
                 className="bg-white text-blue-600 hover:bg-gray-100 px-4 py-2 rounded-lg text-sm font-medium"
               >
-                Login
+                Prihlásiť sa
               </Link>
               <Link
                 to="/register"
                 className="bg-blue-500 border-1 border-solid border-white hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
               >
-                Sign Up
+                Registrovať sa
               </Link>
             </>
           )}

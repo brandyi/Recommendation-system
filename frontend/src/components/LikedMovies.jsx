@@ -51,7 +51,7 @@ const LikedMovies = () => {
       <NavBar />
       
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Your Liked Movies</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Vaše obľúbené filmy</h1>
         
         {loading && (
           <div className="flex justify-center items-center h-64">
@@ -67,12 +67,12 @@ const LikedMovies = () => {
         
         {!loading && !error && likedMovies.length === 0 && (
           <div className="text-center py-10 bg-white rounded-lg shadow-md">
-            <p className="text-xl text-gray-600 mb-4">You haven't liked any movies yet.</p>
+            <p className="text-xl text-gray-600 mb-4">Zatiaľ nemáte žiadne obľúbené filmy.</p>
             <button 
               onClick={() => navigate('/generate')}
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
             >
-              Get Recommendations
+              Získať odporúčania
             </button>
           </div>
         )}

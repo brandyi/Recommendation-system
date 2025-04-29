@@ -100,7 +100,7 @@ const Questionnaire = () => {
   if (questions.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p>Loading questions...</p>
+        <p>Načitávam otázky...</p>
       </div>
     );
   }
@@ -110,7 +110,7 @@ const Questionnaire = () => {
   return (
     <section className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-        <h1 className="text-3xl font-bold text-blue-600 mb-6">Survey</h1>
+        <h1 className="text-3xl font-bold text-blue-600 mb-6">Dotazník</h1>
         {error && (
           <div className="mb-4 p-3 text-red-700 bg-red-100 border border-red-400 rounded">
             {error}
@@ -148,14 +148,14 @@ const Questionnaire = () => {
               onClick={handleNext}
               className="text-white font-medium rounded-lg text-sm px-5 py-2.5 bg-blue-600 hover:bg-blue-700"
             >
-              Next
+              Ďalšia otázka
             </button>
           ) : (
             <button
               onClick={handleSubmit}
               className="text-white font-medium rounded-lg text-sm px-5 py-2.5 bg-blue-600 hover:bg-blue-700"
             >
-              Submit
+              Odoslať odpoveď
             </button>
           )}
         </div>

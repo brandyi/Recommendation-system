@@ -90,14 +90,15 @@ const Register = () => {
       {success ? (
         <section className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 text-center">
           <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-auto">
-            <h1 className="text-3xl font-bold text-blue-600 mb-4">
-              You have successfully been registered with name {user}!
+            <h1 className="text-3xl font-bold text-blue-600 mb-6">
+              Boli ste úspešne zaregistrovaný {user}!
             </h1>
-            <p>
-              <Link to="/login" className="text-blue-600 hover:underline">
-                Login
-              </Link>
-            </p>
+            <Link
+              to="/login"
+              className="bg-blue-500 border-1 border-solid border-white hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+            >
+              Prihlásiť sa
+            </Link>
           </div>
         </section>
       ) : (
@@ -110,7 +111,9 @@ const Register = () => {
                 {errMsg}
               </p>
             </div>
-            <h1 className="text-3xl font-bold text-blue-600 mb-6">Register</h1>
+            <h1 className="text-3xl font-bold text-blue-600 mb-6">
+              Registrácia
+            </h1>
             <form onSubmit={handleSubmit}>
               <div
                 className={`relative z-0 w-full mb-3 group ${
@@ -138,7 +141,7 @@ const Register = () => {
                   htmlFor="floating_username"
                   className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
-                  Username
+                  Meno
                 </label>
               </div>
               <p
@@ -150,11 +153,11 @@ const Register = () => {
                 }
               >
                 <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
-                4 to 24 characters.
+                4 až 24 znakov.
                 <br />
-                Must begin with a letter.
+                Musí sa začínať písmenom.
                 <br />
-                Letters, numbers, underscores, hyphens allowed.
+                Písmená, čísla, podčiarkovníky, spojovníky povolené.
               </p>
 
               <div
@@ -182,7 +185,7 @@ const Register = () => {
                   htmlFor="floating_password"
                   className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
-                  Password
+                  Heslo
                 </label>
                 <button
                   type="button"
@@ -200,12 +203,11 @@ const Register = () => {
                 }
               >
                 <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
-                8 to 24 characters.
+                8 až 24 znakov.
                 <br />
-                Must include uppercase and lowercase letters, a number and a
-                special character.
+                Musí obsahovať veľké a malé písmená, číslo a špeciálny znak.
                 <br />
-                Allowed special characters: <span>!</span> <span>@</span>{" "}
+                Povolené špecíalne znaky: <span>!</span> <span>@</span>{" "}
                 <span>#</span> <span>$</span>{" "}
                 <span aria-label="percent">%</span>
               </p>
@@ -235,7 +237,7 @@ const Register = () => {
                   htmlFor="floating_repeat_password"
                   className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
-                  Confirm Password
+                  Potvrdenie hesla
                 </label>
                 <button
                   type="button"
@@ -253,7 +255,7 @@ const Register = () => {
                 }
               >
                 <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
-                Must match password above.
+                Musí sa zhodovať s heslom vyššie.
               </p>
 
               <button
@@ -264,13 +266,13 @@ const Register = () => {
                 }`}
                 disabled={!validName || !validPwd || !validMatch}
               >
-                Sign up
+                Registrovať sa
               </button>
             </form>
             <p className="text-gray-700 mt-4">
-              Already registered?{" "}
-              <Link to="/" className="text-blue-600 hover:underline">
-                Sign in
+              Už máte účet?{" "}
+              <Link to="/login" className="text-blue-600 hover:underline">
+                Prihlásiť sa
               </Link>
             </p>
           </div>

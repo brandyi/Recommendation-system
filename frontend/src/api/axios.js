@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = 'http://localhost:3000';
+const baseURL = 'https://movie-rec-backend-722282028678.europe-central2.run.app';
 
 export default axios.create({
   baseURL: baseURL,

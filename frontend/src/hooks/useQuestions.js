@@ -7,13 +7,13 @@ const useQuestions = () => {
     const Questions = [
       {
         id: 1,
-        text: "What are your favorite movie genres?",
+        text: "Aké sú vaše obľúbené filmové žánre ?",
         options: ["Action", "Adventure", "Animation", "Children's", "Comedy", "Crime", "Documentary", "Drama", "Fantasy", "Film-Noir", "Horror", "Musical", "Mystery", "Romance", "Sci-Fi", "Thriller", "War", "Western"],
         multiple: true,
       },
       {
         id: 2,
-        text: "Which decades of movies do you enjoy the most?",
+        text: "Ktorú dekádu filmov najviac obľubujete?",
         options: ["before 1990s", "1990s", "2000s", "2010s"],
         multiple: false,
       },

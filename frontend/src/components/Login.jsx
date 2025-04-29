@@ -68,7 +68,7 @@ const Login = () => {
             {errMsg}
           </p>
         </div>
-        <h1 className="text-3xl font-bold text-blue-600 mb-6">Sign in</h1>
+        <h1 className="text-3xl font-bold text-blue-600 mb-6">Prihlásenie</h1>
         <form onSubmit={handleSubmit}>
           <div
             className={
@@ -90,7 +90,7 @@ const Login = () => {
               htmlFor="floating_username"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
-              Username
+              Meno
             </label>
           </div>
           <div
@@ -112,7 +112,7 @@ const Login = () => {
               htmlFor="floating_password"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
-              Password
+              Heslo
             </label>
             <button
               type="button"
@@ -127,13 +127,13 @@ const Login = () => {
               "text-white font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 mt-3 bg-blue-600 hover:bg-blue-700"
             }
           >
-            Sign in
+            Prihlásiť sa
           </button>
         </form>
         <p className="text-gray-700 mt-4">
-          Need an Account?{" "}
+          Ešte nemáte účet?{" "}
           <Link to="/register" className="text-blue-600 hover:underline">
-            Sign up
+            Zaregistrujte sa
           </Link>
         </p>
       </div>

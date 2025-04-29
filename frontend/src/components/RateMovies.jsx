@@ -80,7 +80,7 @@ const RateMovies = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex flex-col items-center py-10">
-      <h1 className="text-3xl font-bold text-blue-600 mb-6">Rate Movies</h1>
+      <h1 className="text-3xl font-bold text-blue-600 mb-6">Ohodnoť filmy</h1>
       <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg">
         <ul className="space-y-4">
           {movies.map((movie) => (
@@ -109,7 +109,7 @@ const RateMovies = () => {
                   onClick={() => handleChange(movie.movieid, movie.source)}
                   className="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-4 py-2"
                 >
-                  Change
+                  Zmeň film
                 </button>
               </div>
             </li>
@@ -120,7 +120,7 @@ const RateMovies = () => {
             className="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-6 py-3"
             onClick={() => submitRating()}
           >
-            Submit All Ratings
+            Pošli všetky ohodnotenia
           </button>
         </div>
       </div>
