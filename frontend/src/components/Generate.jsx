@@ -289,7 +289,7 @@ const Generate = () => {
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* NCF Recommendations */}
-              <div className="bg-white rounded-lg shadow-md p-6 sm:p-3">
+              <div className="bg-white rounded-lg shadow-md p-3 md:p-6">
                 <h2 className="text-xl font-semibold text-center mb-4">
                   <span className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full mb-2">
                     Skupina A
@@ -343,7 +343,7 @@ const Generate = () => {
               </div>
 
               {/* CF Recommendations */}
-              <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="bg-white rounded-lg shadow-md p-3 md:p-6">
                 <h2 className="text-xl font-semibold text-center mb-4">
                   <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full mb-2">
                     Skupina B
