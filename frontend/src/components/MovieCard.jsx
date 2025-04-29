@@ -8,11 +8,13 @@ const MovieCard = ({ movie, onLike }) => {
   const [liked, setLiked] = useState(movie.isLiked || false);
   const [imgSrc, setImgSrc] = useState(null);
 
-  useEffect(async() => {
+  useEffect(() => {
     const fetchMovieImage = async () => {
       try {
         const responseBackend = await axios.get(`/movies/${movie.itemID}`);
         const tmdbID = responseBackend.data;
+
+        console.log("Movie ID from backend:", tmdbID);
 
         const responseAPI = await axios.get(
           `https://api.themoviedb.org/3/movie/${tmdbID}?language=en-US`, { 
