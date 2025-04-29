@@ -11,6 +11,7 @@ const MovieCard = ({ movie, onLike }) => {
   useEffect(() => {
     const fetchMovieImage = async () => {
       try {
+        console.log("Movie ID from props:", movie.itemID);
         const responseBackend = await axios.get(`/movies/${movie.itemID}`);
         const tmdbID = responseBackend.data;
 
