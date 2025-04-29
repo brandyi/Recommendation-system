@@ -1,8 +1,41 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import axios from "../api/axios";
+
+API_KEY = import.meta.env.TMDB_API_KEY
 
 const MovieCard = ({ movie, onLike }) => {
   const [liked, setLiked] = useState(movie.isLiked || false);
+  const [imgSrc, setImgSrc] = useState(null);
+
+  useEffect(async() => {
+    const fetchMovieImage = async () => {
+      try {
+        const responseBackend = await axios.get(`/movies/${movie.itemID}`);
+        const tmdbID = responseBackend.data.tmdbID;
+
+        const responseAPI = await axios.get(
+          `https://api.themoviedb.org/3/movie/${tmdbID}?language=en-US`, { 
+            headers: {
+              accept: 'application/json',
+              Authorization: 'Bearer ' + API_KEY,
+            }
+          }
+        );
+        const imagePath = responseAPI.data.poster_path;
+        
+        if (imagePath) {
+          setImgSrc(`https://image.tmdb.org/t/p/original${imagePath}`);
+        } else {
+          setImgSrc(null);
+        }
+
+      } catch (error) {
+        console.error("Error fetching movie image:", error);
+      }
+    };
+    fetchMovieImage();
+  }, [movie.itemID]);
 
   useEffect(() => {
     setLiked(movie.isLiked || false);
@@ -21,22 +54,32 @@ const MovieCard = ({ movie, onLike }) => {
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-xl mx-auto h-4/5">
       <div className="h-64 bg-gray-200 flex flex-col items-center justify-center text-center text-gray-500">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-16 w-16 mb-2"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+      {imgSrc ? (
+          <img 
+            src={imgSrc} 
+            alt={movie.title} 
+            className="w-full h-full object-cover"
           />
-        </svg>
-        <p className="text-sm font-medium">Obrázok nedostupný</p>
-        <p className="text-base font-semibold mt-1">{movie.title}</p>
+        ) : (
+          <>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-16 w-16 mb-2 text-gray-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            <p className="text-sm font-medium text-gray-500">Obrázok nedostupný</p>
+            <p className="text-base font-semibold mt-1 text-gray-600">{movie.title}</p>
+          </>
+        )}
       </div>
 
       <div className="p-6">
