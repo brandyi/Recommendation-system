@@ -12,7 +12,7 @@ const MovieCard = ({ movie, onLike }) => {
     const fetchMovieImage = async () => {
       try {
         const responseBackend = await axios.get(`/movies/${movie.itemID}`);
-        const tmdbID = responseBackend.data.tmdbID;
+        const tmdbID = responseBackend.data;
 
         const responseAPI = await axios.get(
           `https://api.themoviedb.org/3/movie/${tmdbID}?language=en-US`, { 
