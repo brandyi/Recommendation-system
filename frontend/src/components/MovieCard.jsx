@@ -1,18 +1,20 @@
 import { useState, useEffect} from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import axios from "../api/axios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import axios from "axios";
 
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY
+const API_TOKEN = import.meta.env.VITE_TMDB_API_TOKEN;
 
 const MovieCard = ({ movie, onLike }) => {
   const [liked, setLiked] = useState(movie.isLiked || false);
   const [imgSrc, setImgSrc] = useState(null);
 
+  const axiosPrivate = useAxiosPrivate();
+
   useEffect(() => {
     const fetchMovieImage = async () => {
       try {
-        console.log("Movie ID from props:", movie.itemID);
-        const responseBackend = await axios.get(`/movies/${movie.itemID}`);
+        const responseBackend = await axiosPrivate.get(`/movies/${movie.itemID}`);
         const tmdbID = responseBackend.data;
 
         console.log("Movie ID from backend:", tmdbID);
@@ -21,10 +23,11 @@ const MovieCard = ({ movie, onLike }) => {
           `https://api.themoviedb.org/3/movie/${tmdbID}?language=en-US`, { 
             headers: {
               accept: 'application/json',
-              Authorization: 'Bearer ' + API_KEY,
+              Authorization: 'Bearer ' + API_TOKEN,
             }
           }
         );
+        const responseAPIData = responseAPI.data;
         const imagePath = responseAPI.data.poster_path;
         
         if (imagePath) {
@@ -56,12 +59,12 @@ const MovieCard = ({ movie, onLike }) => {
 
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-xl mx-auto h-4/5">
-      <div className="h-64 bg-gray-200 flex flex-col items-center justify-center text-center text-gray-500">
+      <div className="aspect-[2/3] bg-gray-200 flex flex-col items-center justify-center text-center text-gray-500">
       {imgSrc ? (
           <img 
             src={imgSrc} 
             alt={movie.title} 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
           />
         ) : (
           <>
