@@ -108,7 +108,9 @@ const Generate = () => {
 
         const response2 = await axiosPrivate.get("/feedback/voted");
         if (response2.data.voted === true) {
+          localStorage.setItem(`${auth.user}_has_voted`, 'true');
           setHasVoted(true);
+
         } else {
           setHasVoted(false);
         }
