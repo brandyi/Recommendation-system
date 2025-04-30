@@ -42,6 +42,15 @@ const RateMovies = () => {
         `/movies/change?movieId=${movieId}&source=${source || 'random'}`
       );
       
+      const newMovieId = response.data.movieid;
+      const isDuplicate = movies.some(movie => 
+       movie.movieid === newMovieId
+      );
+      
+      if (isDuplicate) {
+        return handleChange(movieId, source);
+      }
+
       const newMovie = {
         ...response.data,
         genres: response.data.genres.replaceAll("|", ", ")
