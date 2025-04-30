@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "./Navbar";
 import MovieCard from "./MovieCard";
@@ -247,48 +247,55 @@ const Generate = () => {
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
           </div>
-        ) : hasVoted ? (
-          // Show feedback message when user has already voted
-          <div className="flex flex-col items-center justify-center bg-white rounded-lg shadow-md p-8 mb-8">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-green-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Ďakujem za tvoju spätnú väzbu!</h2>
-            <p className="text-lg text-gray-600 text-center">
-              Tvoje hodnotenie bolo úspešne zaznamenané. Tieto informácie my pomôžu zlepšiť kvalitu odporúčaní.
-            </p>
-          </div>
         ) : (
           <>
-            {/* Comparison and Skip Controls */}
+            {/* Comparison and Vote Controls or Thank You Message */}
             {currentNcfRecommendation && currentCfRecommendation && (
               <div className="flex flex-col items-center justify-center bg-white rounded-lg shadow-md p-6 mb-8">
-                <h3 className="text-lg font-semibold text-center mb-6 max-w-3xl mx-auto leading-relaxed">
-                  <span className="font-bold">Pozorne</span> si prezri obidve
-                  skupiny filmov. Každá skupina obsahuje po{" "}
-                  <span className="font-bold">10 filmov</span>.
-                  <br />
-                  Po prezrení obidvoch skupín prosím daj vedieť, ktorá skupina
-                  sa ti páčila viac tlačídlami hneď pod týmto textom.
-                </h3>
-                <div className="flex gap-4 mb-4">
-                  <button
-                    onClick={() => handlePreferenceSelection("ncf")}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full"
-                  >
-                    Vybrať skupinu A
-                  </button>
-                  <button
-                    onClick={() => handlePreferenceSelection("cf")}
-                    className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-full"
-                  >
-                    Vybrať skupinu B
-                  </button>
-                </div>
+                {hasVoted ? (
+                  // Thank you message
+                  <div className="flex flex-col items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-green-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">Ďakujem za tvoju spätnú väzbu!</h2>
+                    <p className="text-lg text-gray-600 text-center">
+                      Tvoje hodnotenie bolo úspešne zaznamenané. Tieto informácie my pomôžu zlepšiť kvalitu odporúčaní.
+                    </p>
+                  </div>
+                ) : (
+                  // Voting instructions and buttons
+                  <>
+                    <h3 className="text-lg font-semibold text-center mb-6 max-w-3xl mx-auto leading-relaxed">
+                      <span className="font-bold">Pozorne</span> si prezri obidve
+                      skupiny filmov. Každá skupina obsahuje po{" "}
+                      <span className="font-bold">10 filmov</span>.
+                      <br />
+                      Po prezrení obidvoch skupín prosím daj vedieť, ktorá skupina
+                      sa ti páčila viac tlačídlami hneď pod týmto textom. Dávaj pozor, po kliknutí na tlačidlo už nie je možné hodnotenie zmeniť.
+                    </h3>
+                    <div className="flex gap-4 mb-4">
+                      <button
+                        onClick={() => handlePreferenceSelection("ncf")}
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full"
+                      >
+                        Vybrať skupinu A
+                      </button>
+                      <button
+                        onClick={() => handlePreferenceSelection("cf")}
+                        className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-full"
+                      >
+                        Vybrať skupinu B
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             )}
+
+            {/* Movie recommendations - always shown when available */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* NCF Recommendations */}
+              {/* NCF Recommendations panel */}
               <div className="bg-white rounded-lg shadow-md p-3 md:p-6">
                 <h2 className="text-xl font-semibold text-center mb-4">
                   <span className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full mb-2">
@@ -342,7 +349,7 @@ const Generate = () => {
                 )}
               </div>
 
-              {/* CF Recommendations */}
+              {/* CF Recommendations panel */}
               <div className="bg-white rounded-lg shadow-md p-3 md:p-6">
                 <h2 className="text-xl font-semibold text-center mb-4">
                   <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full mb-2">
