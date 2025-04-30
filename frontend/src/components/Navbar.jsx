@@ -38,7 +38,7 @@ const Navbar = () => {
     <nav className="bg-blue-500 text-white shadow-md">
       <div className="container mx-auto px-2 py-2 md:px-4 md:py-3 flex justify-between items-center">
         <div className="flex items-center">
-          <Link to="/" className="text-xl md:text-2xl font-bold">
+          <Link to="/" className="text-l md:text-2xl font-bold">
             <span className="text-white">MovieRecommender</span>
           </Link>
         </div>

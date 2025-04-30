@@ -273,13 +273,13 @@ const Generate = () => {
                 ) : (
                   // Voting instructions and buttons
                   <>
-                    <h3 className="text-lg font-semibold text-center mb-6 max-w-3xl mx-auto leading-relaxed">
+                    <h3 className="text-lg text-center mb-6 max-w-3xl mx-auto leading-relaxed">
                       <span className="font-bold">Pozorne</span> si prezri obidve
                       skupiny filmov. Každá skupina obsahuje po{" "}
                       <span className="font-bold">10 filmov</span>.
                       <br />
                       Po prezrení obidvoch skupín prosím daj vedieť, ktorá skupina
-                      sa ti páčila viac tlačídlami hneď pod týmto textom. Dávaj pozor, po kliknutí na tlačidlo už nie je možné hodnotenie zmeniť.
+                      sa ti páčila viac, tlačídlami hneď pod týmto textom. Dávaj pozor, po kliknutí na tlačidlo už nie je možné hodnotenie zmeniť.
                     </h3>
                     <div className="flex gap-4 mb-4">
                       <button
