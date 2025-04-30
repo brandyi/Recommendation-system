@@ -30,11 +30,9 @@ const Generate = () => {
     // Check if user has already voted
     if (localStorage.getItem(`${auth.user}_has_voted`) === 'true') {
       setHasVoted(true);
-      setLoading(false);
-      return;
     }
     
-    else if (
+    if (
       localStorage.getItem(`${auth.user}_ncf_recommendations`) &&
       localStorage.getItem(`${auth.user}_cf_recommendations`)
     ) {
@@ -107,6 +105,13 @@ const Generate = () => {
           `${auth.user}_cf_recommendations`,
           JSON.stringify(cfWithLikes)
         );
+
+        const response2 = await axiosPrivate.get("/feedback/voted");
+        if (response2.data.voted === true) {
+          setHasVoted(true);
+        } else {
+          setHasVoted(false);
+        }
       } else {
         setError("No more recommendations available");
       }
