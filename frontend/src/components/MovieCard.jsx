@@ -11,9 +11,11 @@ const MovieCard = ({ movie, onLike }) => {
 
   const axiosPrivate = useAxiosPrivate();
 
-  setImgSrc(null);
   
+
   useEffect(() => {
+
+    setImgSrc(null);
     const fetchMovieImage = async () => {
       try {
         const responseBackend = await axiosPrivate.get(`/movies/${movie.itemID}`);
