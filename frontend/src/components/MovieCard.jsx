@@ -11,6 +11,8 @@ const MovieCard = ({ movie, onLike }) => {
 
   const axiosPrivate = useAxiosPrivate();
 
+  setImgSrc(null);
+  
   useEffect(() => {
     const fetchMovieImage = async () => {
       try {
@@ -27,7 +29,7 @@ const MovieCard = ({ movie, onLike }) => {
             }
           }
         );
-        const responseAPIData = responseAPI.data;
+
         const imagePath = responseAPI.data.poster_path;
         
         if (imagePath) {
