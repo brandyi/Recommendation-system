@@ -65,15 +65,13 @@ const MovieCard = ({ movie, onLike }) => {
       className="bg-white rounded-lg overflow-hidden shadow-xl mx-auto 
     h-auto sm:h-4/5 md:h-3/4 lg:h-3/5 xl:h-2/3"
     >
-      <div className="aspect-[2/3] bg-gray-200 flex flex-col items-center justify-center text-center text-gray-500 max-h-[60vh]">
+      <div className="aspect-[2/3] bg-gray-200 flex items-center justify-center text-center text-gray-500 max-h-[60vh]">
         {imgSrc ? (
-          <div className="w-full h-full flex items-center justify-center overflow-hidden">
             <img
               src={imgSrc}
               alt={movie.title}
-              className="w-full h-full object-contain"
+              className="max-h-full max-w-full object-contain"
             />
-          </div>
         ) : (
           <>
             <svg
