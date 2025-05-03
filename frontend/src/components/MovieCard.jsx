@@ -65,7 +65,7 @@ const MovieCard = ({ movie, onLike }) => {
       className="bg-white rounded-lg overflow-hidden shadow-xl mx-auto 
     h-auto sm:h-4/5 md:h-3/4 lg:h-3/5 xl:h-2/3 flex flex-col"
     >
-      <div className="aspect-[2/3] bg-gray-200 text-center text-gray-500 max-h-[60vh] align-middle">
+      <div className="aspect-[2/3] bg-gray-200 text-center text-gray-500 max-h-[60vh] flex items-center justify-center">
         {imgSrc ? (
           <img
             src={imgSrc}
