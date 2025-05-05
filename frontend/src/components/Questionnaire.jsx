@@ -38,7 +38,43 @@ const Questionnaire = () => {
     };
   }, []);
 
+  // Add these two validation functions
+  const isCurrentQuestionAnswered = () => {
+    const questionId = currentQuestion.id;
+    if (!answers[questionId]) return false;
+    
+    // For multiple-choice questions, ensure at least one option is selected
+    if (currentQuestion.multiple) {
+      return Array.isArray(answers[questionId]) && answers[questionId].length > 0;
+    }
+    
+    // For single-choice questions
+    return answers[questionId] !== undefined;
+  };
+
+  const areAllQuestionsAnswered = () => {
+    return questions.every(question => {
+      if (!answers[question.id]) return false;
+      
+      if (question.multiple) {
+        return Array.isArray(answers[question.id]) && answers[question.id].length > 0;
+      }
+      
+      return answers[question.id] !== undefined;
+    });
+  };
+
   const handleSubmit = async () => {
+    if (!isCurrentQuestionAnswered()) {
+      setError("Prosím, odpovedzte na aktuálnu otázku.");
+      return;
+    }
+    
+    if (!areAllQuestionsAnswered()) {
+      setError("Niektoré otázky neboli zodpovedané. Skontrolujte svoje odpovede.");
+      return;
+    }
+
     const controller = new AbortController();
 
     try {
@@ -92,6 +128,12 @@ const Questionnaire = () => {
   };
 
   const handleNext = () => {
+    if (!isCurrentQuestionAnswered()) {
+      setError("Prosím, odpovedzte na otázku pred pokračovaním.");
+      return;
+    }
+    
+    setError(null);
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     }
@@ -146,7 +188,12 @@ const Questionnaire = () => {
           {currentQuestionIndex < questions.length - 1 ? (
             <button
               onClick={handleNext}
-              className="text-white font-medium rounded-lg text-sm px-5 py-2.5 bg-blue-600 hover:bg-blue-700"
+              disabled={!isCurrentQuestionAnswered()}
+              className={`text-white font-medium rounded-lg text-sm px-5 py-2.5 ${
+                isCurrentQuestionAnswered() 
+                  ? "bg-blue-600 hover:bg-blue-700" 
+                  : "bg-blue-400 cursor-not-allowed"
+              }`}
             >
               Ďalšia otázka
             </button>
