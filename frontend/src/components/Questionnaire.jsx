@@ -66,12 +66,12 @@ const Questionnaire = () => {
 
   const handleSubmit = async () => {
     if (!isCurrentQuestionAnswered()) {
-      setError("Prosím, odpovedzte na aktuálnu otázku.");
+      setError("Prosím, odpovedz na aktuálnu otázku.");
       return;
     }
     
     if (!areAllQuestionsAnswered()) {
-      setError("Niektoré otázky neboli zodpovedané. Skontrolujte svoje odpovede.");
+      setError("Niektoré otázky neboli zodpovedané. Skontroluj svoje odpovede.");
       return;
     }
 
