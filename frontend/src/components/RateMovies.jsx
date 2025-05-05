@@ -6,6 +6,7 @@ import StarRating from "./StarRating";
 const RateMovies = () => {
   const [movies, setMovies] = useState([]);
   const [ratedMovies, setRatedMovies] = useState({});
+  const [ratingError, setRatingError] = useState(null);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,33 +40,31 @@ const RateMovies = () => {
   const handleChange = async (movieId, source) => {
     try {
       const response = await axiosPrivate.get(
-        `/movies/change?movieId=${movieId}&source=${source || 'random'}`
+        `/movies/change?movieId=${movieId}&source=${source || "random"}`
       );
-      
+
       const newMovieId = response.data.movieid;
-      const isDuplicate = movies.some(movie => 
-       movie.movieid === newMovieId
-      );
-      
+      const isDuplicate = movies.some((movie) => movie.movieid === newMovieId);
+
       if (isDuplicate) {
         return handleChange(movieId, source);
       }
 
       const newMovie = {
         ...response.data,
-        genres: response.data.genres.replaceAll("|", ", ")
+        genres: response.data.genres.replaceAll("|", ", "),
       };
-      
+
       const updatedMovies = movies.map((movie) =>
         movie.movieid === movieId ? newMovie : movie
       );
-      
+
       setRatedMovies((prevRated) => {
         const updatedRated = { ...prevRated };
         delete updatedRated[movieId];
         return updatedRated;
       });
-      
+
       setMovies(updatedMovies);
     } catch (err) {
       console.error("Error changing movie:", err);
@@ -77,6 +76,26 @@ const RateMovies = () => {
   };
 
   const submitRating = async () => {
+    // Clear previous errors
+    setRatingError(null);
+
+    // Check if all movies are rated
+    const unratedMovies = movies.filter((movie) => !ratedMovies[movie.movieid]);
+
+    if (unratedMovies.length > 0) {
+      setRatingError(
+        `Prosím, ohodnoť všetky filmy pred odoslaním (${unratedMovies.length} neohodnotených)`
+      );
+
+      // Scroll to the first unrated movie
+      const firstUnratedId = unratedMovies[0].movieid;
+      const element = document.getElementById(`movie-${firstUnratedId}`);
+      if (element)
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      return;
+    }
+
     try {
       await axiosPrivate.post("/movies/rate", {
         ratings: ratedMovies,
@@ -95,16 +114,30 @@ const RateMovies = () => {
         <ul className="space-y-4">
           {movies.map((movie) => (
             <li
+              id={`movie-${movie.movieid}`}
               key={movie.movieid}
-              className="flex flex-col md:flex-row md:justify-between gap-4 md:items-center p-4 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200"
+              className={`flex flex-col md:flex-row md:justify-between gap-4 md:items-center p-4 rounded-lg shadow-sm 
+                ${
+                  !ratedMovies[movie.movieid] && ratingError
+                    ? "bg-red-50 border border-red-200"
+                    : "bg-gray-100 hover:bg-gray-200"
+                }`}
             >
               <div>
                 <h2 className="text-lg font-semibold text-gray-800">
                   {movie.title}
                 </h2>
                 <p className="text-sm text-gray-600">{movie.genres}</p>
-                <span className={`text-xs px-2 py-1 rounded-full ${movie.source === 'preference' ? 'bg-blue-100 text-blue-800' : 'bg-gray-300 text-gray-800'}`}>
-                  {movie.source === 'preference' ? 'Založené na tvojich preferenciách' : 'Náhodný výber'}
+                <span
+                  className={`text-xs px-2 py-1 rounded-full ${
+                    movie.source === "preference"
+                      ? "bg-blue-100 text-blue-800"
+                      : "bg-gray-300 text-gray-800"
+                  }`}
+                >
+                  {movie.source === "preference"
+                    ? "Založené na tvojich preferenciách"
+                    : "Náhodný výber"}
                 </span>
               </div>
 
@@ -125,13 +158,21 @@ const RateMovies = () => {
             </li>
           ))}
         </ul>
-        <div className="mt-6 flex justify-center">
-          <button
-            className="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-6 py-3"
-            onClick={() => submitRating()}
-          >
-            Pošli všetky ohodnotenia
-          </button>
+        <div className="mt-6">
+          {ratingError && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {ratingError}
+            </div>
+          )}
+
+          <div className="flex justify-center">
+            <button
+              className="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-6 py-3"
+              onClick={() => submitRating()}
+            >
+              Pošli všetky ohodnotenia
+            </button>
+          </div>
         </div>
       </div>
     </div>
