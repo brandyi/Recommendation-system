@@ -14,7 +14,7 @@ const useQuestions = () => {
       {
         id: 2,
         text: "Ktorú dekádu filmov najviac obľubuješ?",
-        options: ["before 1990s", "1990s", "2000s", "2010s"],
+        options: ["pred 1990s", "1990s", "2000s", "2010s a novšie"],
         multiple: false,
       },
     ];

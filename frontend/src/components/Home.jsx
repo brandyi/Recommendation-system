@@ -36,7 +36,7 @@ const Home = () => {
 
             <li className="text-lg">
               <span className="font-medium">Ohodnotenie pár filmov</span> –
-              Pozrieš sa na 5 filmov a ohodnotíš ich od 1 do 5 hviezdičiek. Na
+              Pozrieš sa na 20 filmov a ohodnotíš ich od 1 do 5 hviezdičiek. Na
               základe toho začne systém pracovať. Pre lepšie odporúčania je podstatné, aby si hodnotil filmy, ktoré si už videl.
             </li>
 
