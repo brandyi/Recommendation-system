@@ -5,9 +5,42 @@ import axios from "axios";
 
 const API_TOKEN = import.meta.env.VITE_TMDB_API_TOKEN;
 
-const MovieCard = ({ movie, onLike }) => {
+// Rating component for 1-10 scale
+const WatchLikelihoodRating = ({ rating, onRatingChange }) => {
+  return (
+    <div className="mt-4">
+      <p className="text-lg font-medium text-gray-700 mb-2">Pravdepodobnosť sledovania:</p>
+      <div className="flex flex-wrap items-center gap-1">
+        <span className="text-sm text-gray-500 mr-1">1</span>
+        {[...Array(10)].map((_, i) => (
+          <button
+            key={i}
+            className={`w-8 h-8 rounded-full flex items-center justify-center focus:outline-none transition-colors 
+              ${rating >= i + 1 
+                ? 'bg-blue-500 text-white' 
+                : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
+            onClick={() => onRatingChange(i + 1)}
+          >
+            {i + 1}
+          </button>
+        ))}
+        <span className="text-sm text-gray-500 ml-1">10</span>
+      </div>
+      <p className="text-sm text-gray-500 mt-1">
+        {rating === 0 ? 'Neohodnotené' : 
+         rating <= 3 ? 'Nepravdepodobné' : 
+         rating <= 6 ? 'Možno' : 
+         rating <= 8 ? 'Pravdepodobné' : 
+         'Určite'}
+      </p>
+    </div>
+  );
+};
+
+const MovieCard = ({ movie, onLike, onRateWatchLikelihood }) => {
   const [liked, setLiked] = useState(movie.isLiked || false);
   const [imgSrc, setImgSrc] = useState(null);
+  const [watchRating, setWatchRating] = useState(movie.watchLikelihood || 0);
 
   const axiosPrivate = useAxiosPrivate();
 
@@ -48,11 +81,19 @@ const MovieCard = ({ movie, onLike }) => {
 
   useEffect(() => {
     setLiked(movie.isLiked || false);
-  }, [movie.itemID, movie.isLiked]);
+    setWatchRating(movie.watchLikelihood || 0);
+  }, [movie.itemID, movie.isLiked, movie.watchLikelihood]);
 
   const handleLike = () => {
     setLiked(!liked);
     onLike(movie.itemID);
+  };
+
+  const handleRatingChange = (rating) => {
+    setWatchRating(rating);
+    if (onRateWatchLikelihood) {
+      onRateWatchLikelihood(movie.itemID, rating);
+    }
   };
 
   const genres =
@@ -129,6 +170,12 @@ const MovieCard = ({ movie, onLike }) => {
             ))}
           </div>
         </div>
+        
+        {/* Watch Likelihood Rating */}
+        <WatchLikelihoodRating 
+          rating={watchRating} 
+          onRatingChange={handleRatingChange} 
+        />
       </div>
     </div>
   );

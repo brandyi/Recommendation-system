@@ -69,12 +69,13 @@ const Generate = () => {
           randomizeGroups();
         }
 
-        // Sync with current liked status and shuffle movie order
-        const syncedNcfRecs = await syncLikedStatus(ncfRecs);
-        const syncedCfRecs = await syncLikedStatus(cfRecs);
+        // Sync with current liked status but maintain the same order
+        const syncedNcfRecs = await syncUserData(ncfRecs);
+        const syncedCfRecs = await syncUserData(cfRecs);
 
-        setNcfRecommendations(shuffleArray(syncedNcfRecs));
-        setCfRecommendations(shuffleArray(syncedCfRecs));
+        // Use the already stored order, don't re-shuffle
+        setNcfRecommendations(syncedNcfRecs);
+        setCfRecommendations(syncedCfRecs);
         setNcfIndex(0);
         setCfIndex(0);
         setLoading(false);
@@ -83,7 +84,7 @@ const Generate = () => {
       loadAndSyncRecommendations();
       return;
     }
-      
+    
     // Randomize group assignment for new recommendations
     randomizeGroups();
     fetchNextRecommendation();
@@ -104,6 +105,47 @@ const Generate = () => {
     }
   };
 
+  const syncUserData = async (recommendations) => {
+    try {
+      // Get liked movies
+      const likedResponse = await axiosPrivate.get("/movies/liked");
+      const likedMovieIds = likedResponse.data.map((movie) => movie.movieId);
+      
+      // Get watch likelihood ratings
+      const ratingsResponse = await axiosPrivate.get("/feedback/movie-ratings");
+      
+      // Create lookup maps for each algorithm's ratings
+      const ncfRatings = {};
+      const cfRatings = {};
+      
+      if (ratingsResponse.data) {
+        ratingsResponse.data.forEach(item => {
+          if (item.movie_rating_ncf && item.ncf_movie_id) {
+            ncfRatings[item.ncf_movie_id] = item.movie_rating_ncf;
+          }
+          if (item.movie_rating_cf && item.cf_movie_id) {
+            cfRatings[item.cf_movie_id] = item.movie_rating_cf;
+          }
+        });
+      }
+
+      // Apply ratings based on movie source
+      return recommendations.map((movie) => {
+        const isNcf = movie.source === "neural_cf";
+        return {
+          ...movie,
+          isLiked: likedMovieIds.includes(movie.itemID),
+          watchLikelihood: isNcf 
+            ? ncfRatings[movie.itemID] || movie.watchLikelihood || 0
+            : cfRatings[movie.itemID] || movie.watchLikelihood || 0
+        };
+      });
+    } catch (err) {
+      console.error("Error syncing user data:", err);
+      return recommendations;
+    }
+  };
+
   const fetchNextRecommendation = async () => {
     setLoading(true);
     setError(null);
@@ -119,15 +161,22 @@ const Generate = () => {
           response.data.cf_recommendations
         );
 
-        // Shuffle the movie order within each algorithm
-        const shuffledNcf = shuffleArray(ncfWithLikes);
-        const shuffledCf = shuffleArray(cfWithLikes);
+        // Only shuffle if we don't already have an order for this user
+        let shuffledNcf = ncfWithLikes;
+        let shuffledCf = cfWithLikes;
+        
+        // First time only - create a random order for the movies
+        if (!localStorage.getItem(`${auth.user}_ncf_recommendations`)) {
+          shuffledNcf = shuffleArray(ncfWithLikes);
+          shuffledCf = shuffleArray(cfWithLikes);
+        }
 
         setNcfRecommendations(shuffledNcf);
         setCfRecommendations(shuffledCf);
         setNcfIndex(0);
         setCfIndex(0);
 
+        // Store the ordered recommendations in localStorage
         localStorage.setItem(
           `${auth.user}_ncf_recommendations`,
           JSON.stringify(shuffledNcf)
@@ -141,7 +190,6 @@ const Generate = () => {
         if (response2.data.voted === true) {
           localStorage.setItem(`${auth.user}_has_voted`, 'true');
           setHasVoted(true);
-
         } else {
           setHasVoted(false);
         }
@@ -205,6 +253,83 @@ const Generate = () => {
       );
     } catch (err) {
       console.error("Error liking movie:", err);
+    }
+  };
+
+  // Add/update the handleRateWatchLikelihood function
+  const handleRateWatchLikelihood = async (movieId, rating) => {
+    try {
+      // Determine which algorithm this movie belongs to
+      const isNcfMovie = ncfRecommendations.some(movie => movie.itemID === movieId);
+      const isCfMovie = cfRecommendations.some(movie => movie.itemID === movieId);
+      
+      // Find corresponding movie in the other algorithm (if it exists)
+      let ncfMovieId = isNcfMovie ? movieId : null;
+      let cfMovieId = isCfMovie ? movieId : null;
+      
+      // Get the index of the current movie in its group
+      const currentIndex = isNcfMovie 
+        ? ncfRecommendations.findIndex(movie => movie.itemID === movieId)
+        : cfRecommendations.findIndex(movie => movie.itemID === movieId);
+      
+      // If we found the index, try to find the corresponding movie in the other algorithm
+      if (currentIndex !== -1) {
+        if (isNcfMovie && cfRecommendations.length > currentIndex) {
+          cfMovieId = cfRecommendations[currentIndex].itemID;
+        } else if (isCfMovie && ncfRecommendations.length > currentIndex) {
+          ncfMovieId = ncfRecommendations[currentIndex].itemID;
+        }
+      }
+      
+      // Send rating to backend
+      await axiosPrivate.post('/feedback/rate-movie', {
+        ncf_movie_id: ncfMovieId,
+        cf_movie_id: cfMovieId,
+        movie_rating_ncf: isNcfMovie ? rating : null,
+        movie_rating_cf: isCfMovie ? rating : null
+      });
+
+      // Update local state to reflect the new rating
+      setNcfRecommendations(prev => 
+        prev.map(movie => 
+          movie.itemID === ncfMovieId 
+            ? { ...movie, watchLikelihood: isNcfMovie ? rating : movie.watchLikelihood } 
+            : movie
+        )
+      );
+
+      setCfRecommendations(prev => 
+        prev.map(movie => 
+          movie.itemID === cfMovieId 
+            ? { ...movie, watchLikelihood: isCfMovie ? rating : movie.watchLikelihood } 
+            : movie
+        )
+      );
+
+      // Update localStorage to persist changes
+      localStorage.setItem(
+        `${auth.user}_ncf_recommendations`,
+        JSON.stringify(
+          ncfRecommendations.map(movie => 
+            movie.itemID === ncfMovieId 
+              ? { ...movie, watchLikelihood: isNcfMovie ? rating : movie.watchLikelihood } 
+              : movie
+          )
+        )
+      );
+
+      localStorage.setItem(
+        `${auth.user}_cf_recommendations`,
+        JSON.stringify(
+          cfRecommendations.map(movie => 
+            movie.itemID === cfMovieId 
+              ? { ...movie, watchLikelihood: isCfMovie ? rating : movie.watchLikelihood } 
+              : movie
+          )
+        )
+      );
+    } catch (err) {
+      console.error("Error rating movie watch likelihood:", err);
     }
   };
 
@@ -394,9 +519,8 @@ const Generate = () => {
                       <div className="flex-grow mx-4">
                         <MovieCard
                           movie={groupA.current}
-                          onLike={() =>
-                            handleLikeMovie(groupA.current.itemID)
-                          }
+                          onLike={() => handleLikeMovie(groupA.current.itemID)}
+                          onRateWatchLikelihood={handleRateWatchLikelihood}
                         />
                       </div>
 
@@ -448,9 +572,8 @@ const Generate = () => {
                       <div className="flex-grow mx-4">
                         <MovieCard
                           movie={groupB.current}
-                          onLike={() =>
-                            handleLikeMovie(groupB.current.itemID)
-                          }
+                          onLike={() => handleLikeMovie(groupB.current.itemID)}
+                          onRateWatchLikelihood={handleRateWatchLikelihood}
                         />
                       </div>
 
