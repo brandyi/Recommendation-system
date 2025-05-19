@@ -9,7 +9,7 @@ const API_TOKEN = import.meta.env.VITE_TMDB_API_TOKEN;
 const WatchLikelihoodRating = ({ rating, onRatingChange }) => {
   return (
     <div className="mt-4">
-      <p className="text-lg font-medium text-gray-700 mb-2">Ako veľmi by si si pozrel tento film?</p>
+      <p className="text-lg font-medium text-gray-700 mb-2">Na koľko by si si tento film reálne pozrel?</p>
       <div className="flex flex-wrap items-center gap-1">
         {[...Array(10)].map((_, i) => (
           <button
