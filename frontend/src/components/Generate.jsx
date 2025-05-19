@@ -462,7 +462,7 @@ const Generate = () => {
                     </svg>
                     <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">Ďakujem za tvoju spätnú väzbu!</h2>
                     <p className="text-lg text-gray-600 text-center">
-                      Tvoje hodnotenie bolo úspešne zaznamenané. Tieto informácie my pomôžu zlepšiť kvalitu odporúčaní.
+                      Tvoje hodnotenie bolo úspešne zaznamenané. Tieto informácie mi pomôžu zlepšiť kvalitu odporúčaní.
                     </p>
                   </div>
                 ) : (
