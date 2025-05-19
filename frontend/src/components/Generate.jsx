@@ -473,8 +473,7 @@ const Generate = () => {
                       skupiny filmov. Každá skupina obsahuje po{" "}
                       <span className="font-bold">10 filmov</span>.
                       <br />
-                      Po prezrení obidvoch skupín prosím daj vedieť, ktorá skupina
-                      sa ti páčila viac, tlačídlami hneď pod týmto textom. Dávaj pozor, po kliknutí na tlačidlo už nie je možné hodnotenie zmeniť.
+                      Pri každom filme mi prosím ohodnoť ako veľmi by si si tento film pozrel. Taktiež po prezrení obidvoch skupín prosím daj vedieť, ktorá skupina sa ti páčila viac, tlačídlami hneď pod týmto textom. Dávaj pozor, po kliknutí na tlačidlo už nie je možné hodnotenie zmeniť.
                     </h3>
                     <div className="flex gap-4 mb-4">
                       <button

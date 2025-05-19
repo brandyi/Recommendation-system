@@ -44,7 +44,7 @@ const Home = () => {
               <span className="font-medium">Porovnanie odporúčaní</span> –
               Ukážem ti dve sady odporúčaných filmov – jednu od neurónovej siete
               a druhú od klasického algoritmu. Ty rozhodneš, ktorá ti viac
-              sadla.
+              sadla. Taktiež pri každom odporúčaní môžeš vybrať, ako veľmi by si si tento film pozrel.
             </li>
           </ol>
         </div>
