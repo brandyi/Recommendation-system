@@ -277,7 +277,7 @@ const RateMovies = () => {
       });
 
       setMovies(updatedMovies);
-      setNewlyAddedMovie(newMovieId);
+      setNewlyAddedMovie(newMovie.movieid);
     } catch (err) {
       console.error("Error changing movie:", err);
     }
