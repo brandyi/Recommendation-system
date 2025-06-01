@@ -266,6 +266,12 @@ const RateMovies = () => {
         genres: formatGenres(response.data.genres),
       };
 
+      if (currentMovieIds.includes(newMovie.movieid) && newMovie.movieid !== movieId) {
+        console.error("Duplicate movie received, requesting another one");
+        // Try again with explicit exclusion of the duplicate
+        return handleChange(movieId, source);
+      }
+
       const updatedMovies = movies.map((movie) =>
         movie.movieid === movieId ? newMovie : movie
       );
