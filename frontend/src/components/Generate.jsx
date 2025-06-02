@@ -259,75 +259,66 @@ const Generate = () => {
   // Add/update the handleRateWatchLikelihood function
   const handleRateWatchLikelihood = async (movieId, rating) => {
     try {
-      // Determine which algorithm this movie belongs to
-      const isNcfMovie = ncfRecommendations.some(movie => movie.itemID === movieId);
-      const isCfMovie = cfRecommendations.some(movie => movie.itemID === movieId);
+      // Check if this movie exists in each recommendation set
+      const isInNcf = ncfRecommendations.some(movie => movie.itemID === movieId);
+      const isInCf = cfRecommendations.some(movie => movie.itemID === movieId);
       
-      // Find corresponding movie in the other algorithm (if it exists)
-      let ncfMovieId = isNcfMovie ? movieId : null;
-      let cfMovieId = isCfMovie ? movieId : null;
-      
-      // Get the index of the current movie in its group
-      const currentIndex = isNcfMovie 
-        ? ncfRecommendations.findIndex(movie => movie.itemID === movieId)
-        : cfRecommendations.findIndex(movie => movie.itemID === movieId);
-      
-      // If we found the index, try to find the corresponding movie in the other algorithm
-      if (currentIndex !== -1) {
-        if (isNcfMovie && cfRecommendations.length > currentIndex) {
-          cfMovieId = cfRecommendations[currentIndex].itemID;
-        } else if (isCfMovie && ncfRecommendations.length > currentIndex) {
-          ncfMovieId = ncfRecommendations[currentIndex].itemID;
-        }
-      }
+      // Prepare rating data for backend
+      const ratingData = {
+        ncf_movie_id: isInNcf ? movieId : null,
+        cf_movie_id: isInCf ? movieId : null,
+        movie_rating_ncf: isInNcf ? rating : null,
+        movie_rating_cf: isInCf ? rating : null
+      };
       
       // Send rating to backend
-      await axiosPrivate.post('/feedback/rate-movie', {
-        ncf_movie_id: ncfMovieId,
-        cf_movie_id: cfMovieId,
-        movie_rating_ncf: isNcfMovie ? rating : null,
-        movie_rating_cf: isCfMovie ? rating : null
-      });
+      await axiosPrivate.post('/feedback/rate-movie', ratingData);
 
-      // Update local state to reflect the new rating
-      setNcfRecommendations(prev => 
-        prev.map(movie => 
-          movie.itemID === ncfMovieId 
-            ? { ...movie, watchLikelihood: isNcfMovie ? rating : movie.watchLikelihood } 
-            : movie
-        )
-      );
-
-      setCfRecommendations(prev => 
-        prev.map(movie => 
-          movie.itemID === cfMovieId 
-            ? { ...movie, watchLikelihood: isCfMovie ? rating : movie.watchLikelihood } 
-            : movie
-        )
-      );
-
-      // Update localStorage to persist changes
-      localStorage.setItem(
-        `${auth.user}_ncf_recommendations`,
-        JSON.stringify(
-          ncfRecommendations.map(movie => 
-            movie.itemID === ncfMovieId 
-              ? { ...movie, watchLikelihood: isNcfMovie ? rating : movie.watchLikelihood } 
+      // Update NCF recommendations if applicable
+      if (isInNcf) {
+        setNcfRecommendations(prev => 
+          prev.map(movie => 
+            movie.itemID === movieId 
+              ? { ...movie, watchLikelihood: rating } 
               : movie
           )
-        )
-      );
+        );
+        
+        // Update localStorage for NCF
+        localStorage.setItem(
+          `${auth.user}_ncf_recommendations`,
+          JSON.stringify(
+            ncfRecommendations.map(movie => 
+              movie.itemID === movieId 
+                ? { ...movie, watchLikelihood: rating } 
+                : movie
+            )
+          )
+        );
+      }
 
-      localStorage.setItem(
-        `${auth.user}_cf_recommendations`,
-        JSON.stringify(
-          cfRecommendations.map(movie => 
-            movie.itemID === cfMovieId 
-              ? { ...movie, watchLikelihood: isCfMovie ? rating : movie.watchLikelihood } 
+      // Update CF recommendations if applicable
+      if (isInCf) {
+        setCfRecommendations(prev => 
+          prev.map(movie => 
+            movie.itemID === movieId 
+              ? { ...movie, watchLikelihood: rating } 
               : movie
           )
-        )
-      );
+        );
+        
+        // Update localStorage for CF
+        localStorage.setItem(
+          `${auth.user}_cf_recommendations`,
+          JSON.stringify(
+            cfRecommendations.map(movie => 
+              movie.itemID === movieId 
+                ? { ...movie, watchLikelihood: rating } 
+                : movie
+            )
+          )
+        );
+      }
     } catch (err) {
       console.error("Error rating movie watch likelihood:", err);
     }
