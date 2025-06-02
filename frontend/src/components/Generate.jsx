@@ -263,6 +263,17 @@ const Generate = () => {
       const isInNcf = ncfRecommendations.some(movie => movie.itemID === movieId);
       const isInCf = cfRecommendations.some(movie => movie.itemID === movieId);
       
+      // Find the same movie in the other recommendation set (if it exists)
+      let sameMovieInOtherSet = null;
+      if (isInNcf && isInCf) {
+        // If this movie appears in both sets, get the other instance
+        if (ncfRecommendations.some(movie => movie.itemID === movieId)) {
+          sameMovieInOtherSet = cfRecommendations.find(movie => movie.itemID === movieId);
+        } else {
+          sameMovieInOtherSet = ncfRecommendations.find(movie => movie.itemID === movieId);
+        }
+      }
+      
       // Prepare rating data for backend
       const ratingData = {
         ncf_movie_id: isInNcf ? movieId : null,
