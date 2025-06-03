@@ -275,9 +275,24 @@ const Generate = () => {
       }
       
       // Prepare rating data for backend
+      // First determine which set and index the movie is in
+      const ncfIndex = ncfRecommendations.findIndex(movie => movie.itemID === movieId);
+      const cfIndex = cfRecommendations.findIndex(movie => movie.itemID === movieId);
+      
+      // Get the actual index to use
+      const activeIndex = ncfIndex !== -1 ? ncfIndex : cfIndex;
+      
+      // Get IDs at the matching positions in both arrays
+      const ncfMovieId = ncfRecommendations[activeIndex]?.itemID || 
+                        (ncfRecommendations.length > 0 ? ncfRecommendations[0].itemID : movieId);
+                        
+      const cfMovieId = cfRecommendations[activeIndex]?.itemID || 
+                         (cfRecommendations.length > 0 ? cfRecommendations[0].itemID : movieId);
+      
+      // Prepare rating data for backend - no more nulls
       const ratingData = {
-        ncf_movie_id: isInNcf ? movieId : null,
-        cf_movie_id: isInCf ? movieId : null,
+        ncf_movie_id: ncfMovieId,
+        cf_movie_id: cfMovieId,
         movie_rating_ncf: isInNcf ? rating : null,
         movie_rating_cf: isInCf ? rating : null
       };
