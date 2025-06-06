@@ -24,3 +24,24 @@ dist-ssr
 *.sw?
 model_training
 .env
+
+# Docker
+.dockerignore
+Dockerfile
+
+#Cypress
+cypress
+cypress.config.js
+
+#Tests
+Tests
+
+#db
+movierec_db.sql
+
+#current folder packages
+/package-lock.json
+/package.json
+
+#model
+requirements.txt
