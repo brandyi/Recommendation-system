@@ -3,7 +3,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import axios from "axios";
 
-const API_TOKEN = import.meta.env.VITE_TMDB_API_TOKEN;
+const API_TOKEN = process.env.VITE_TMDB_API_TOKEN;
 
 // Component for rating the likelihood of watching a movie
 const WatchLikelihoodRating = ({ rating, onRatingChange }) => {
