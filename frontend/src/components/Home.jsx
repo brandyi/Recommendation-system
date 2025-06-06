@@ -1,14 +1,16 @@
 import Navbar from "./Navbar";
 
+// Component for the home page
 const Home = () => {
   return (
     <div>
-      <Navbar />
+      <Navbar /> {/* Navigation bar */}
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6 text-center">
-          Vitaj vo filmovom odporúčacom experimente!
+          Vitaj vo filmovom odporúčacom experimente! {/* Welcome message */}
         </h1>
 
+        {/* Introduction section */}
         <div className="bg-blue-50 p-4 rounded-lg shadow-sm mb-6">
           <p className="text-md italic">
             Tento systém vznikol ako súčasť mojej bakalárky, kde skúmam, aké
@@ -18,6 +20,7 @@ const Home = () => {
           </p>
         </div>
 
+        {/* Steps section */}
         <div className="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
           <h2 className="text-2xl font-semibold mb-4">Ako to celé prebieha:</h2>
 
@@ -49,6 +52,7 @@ const Home = () => {
           </ol>
         </div>
 
+        {/* Importance section */}
         <div className="bg-blue-50 p-6 rounded-lg shadow-md mb-6">
           <h2 className="text-2xl font-semibold mb-4">Prečo je to dôležité?</h2>
           <p className="text-lg mb-4">
@@ -63,6 +67,7 @@ const Home = () => {
           </p>
         </div>
 
+        {/* Call-to-action section */}
         <div className="bg-green-50 p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-4">Poďme na to!</h2>
           <p className="text-lg">

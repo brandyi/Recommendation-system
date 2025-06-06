@@ -8,79 +8,81 @@ import {
 import axios from "../api/axios.js";
 import { Link } from "react-router-dom";
 
+// Regular expressions for validating username and password
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PASS_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
+// Registration component for creating a new user account
 const Register = () => {
-  const userRef = useRef();
-  const errRef = useRef();
+  const userRef = useRef(); // Reference for username input
+  const errRef = useRef(); // Reference for error message
 
-  const [user, setUser] = useState("");
-  const [validName, setValidName] = useState(false);
-  const [userFocus, setUserFocus] = useState(false);
+  const [user, setUser] = useState(""); // Username state
+  const [validName, setValidName] = useState(false); // Username validation state
+  const [userFocus, setUserFocus] = useState(false); // Focus state for username input
 
-  const [pwd, setPwd] = useState("");
-  const [validPwd, setValidPwd] = useState(false);
-  const [pwdFocus, setPwdFocus] = useState(false);
-  const [showPwd, setShowPwd] = useState(false);
+  const [pwd, setPwd] = useState(""); // Password state
+  const [validPwd, setValidPwd] = useState(false); // Password validation state
+  const [pwdFocus, setPwdFocus] = useState(false); // Focus state for password input
+  const [showPwd, setShowPwd] = useState(false); // Toggle password visibility
 
-  const [matchPwd, setMatchPwd] = useState("");
-  const [validMatch, setValidMatch] = useState(false);
-  const [matchFocus, setMatchFocus] = useState(false);
-  const [showMatchPwd, setShowMatchPwd] = useState(false);
+  const [matchPwd, setMatchPwd] = useState(""); // Confirm password state
+  const [validMatch, setValidMatch] = useState(false); // Confirm password validation state
+  const [matchFocus, setMatchFocus] = useState(false); // Focus state for confirm password input
+  const [showMatchPwd, setShowMatchPwd] = useState(false); // Toggle confirm password visibility
 
-  const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [errMsg, setErrMsg] = useState(""); // Error message state
+  const [success, setSuccess] = useState(false); // Success state for registration
 
   useEffect(() => {
     if (userRef.current) {
-      userRef.current.focus();
+      userRef.current.focus(); // Focus on username input on component mount
     }
   }, []);
 
   useEffect(() => {
-    const result = USER_REGEX.test(user);
+    const result = USER_REGEX.test(user); // Validate username
     setValidName(result);
   }, [user]);
 
   useEffect(() => {
-    const result = PASS_REGEX.test(pwd);
+    const result = PASS_REGEX.test(pwd); // Validate password
     setValidPwd(result);
-    const match = pwd === matchPwd;
+    const match = pwd === matchPwd; // Check if passwords match
     setValidMatch(match);
   }, [pwd, matchPwd]);
 
   useEffect(() => {
-    setErrMsg("");
+    setErrMsg(""); // Clear error message when inputs change
   }, [user, pwd, matchPwd]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
 
-    const v1 = USER_REGEX.test(user);
-    const v2 = PASS_REGEX.test(pwd);
+    const v1 = USER_REGEX.test(user); // Validate username
+    const v2 = PASS_REGEX.test(pwd); // Validate password
     if (!v1 || !v2) {
-      setErrMsg("Invalid entry.");
+      setErrMsg("Invalid entry."); // Show error if validation fails
       return;
     }
 
     try {
       const response = await axios.post(
         "/register",
-        JSON.stringify({ user, pwd }),
+        JSON.stringify({ user, pwd }), // Send registration data
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
-      setSuccess(true);
+      setSuccess(true); // Set success state on successful registration
     } catch (err) {
       if (!err?.response) {
-        setErrMsg("No server response.");
+        setErrMsg("No server response."); // Handle server errors
       } else if (err?.response?.status === 409) {
-        setErrMsg("Username Taken.");
+        setErrMsg("Username Taken."); // Handle username conflict
       } else {
-        setErrMsg("Registration failed.");
+        setErrMsg("Registration failed."); // Handle other errors
       }
     }
   };
@@ -89,6 +91,7 @@ const Register = () => {
     <>
       {success ? (
         <section className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 text-center">
+          {/* Success message */}
           <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-auto">
             <h1 className="text-3xl font-bold text-blue-600 mb-6">
               Boli ste úspešne zaregistrovaný {user}!
@@ -103,6 +106,7 @@ const Register = () => {
         </section>
       ) : (
         <section className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-gray-100">
+          {/* Registration form */}
           <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
             <div
               className={errMsg ? "border-2 border-red-500 p-4 mb-4" : "hidden"}
@@ -115,6 +119,7 @@ const Register = () => {
               Registrácia
             </h1>
             <form onSubmit={handleSubmit}>
+              {/* Username input */}
               <div
                 className={`relative z-0 w-full mb-3 group ${
                   validName
@@ -160,6 +165,7 @@ const Register = () => {
                 Písmená, čísla, podčiarkovníky, spojovníky povolené.
               </p>
 
+              {/* Password input */}
               <div
                 className={`relative z-0 w-full mb-3 group ${
                   validPwd
@@ -212,6 +218,7 @@ const Register = () => {
                 <span aria-label="percent">%</span>
               </p>
 
+              {/* Confirm password input */}
               <div
                 className={`relative z-0 w-full mb-3 group ${
                   validMatch && matchPwd
@@ -258,6 +265,7 @@ const Register = () => {
                 Musí sa zhodovať s heslom vyššie.
               </p>
 
+              {/* Submit button */}
               <button
                 className={`text-white font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 mt-3 ${
                   !validName || !validPwd || !validMatch

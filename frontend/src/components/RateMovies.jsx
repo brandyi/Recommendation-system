@@ -9,92 +9,92 @@ const formatGenres = (genreString) => {
   return typeof genreString === "string" ? genreString.replaceAll("|", ", ") : genreString;
 };
 
+// Component for rating movies
 const RateMovies = () => {
-  // Add these constants at the top of your component
-  const MAX_RATINGS = 20;
-  const MAX_PREFERENCE_MOVIES = 15;
-  const MAX_RANDOM_MOVIES = 5;
+  // Constants for rating limits
+  const MAX_RATINGS = 20; // Maximum number of movies to rate
+  const MAX_PREFERENCE_MOVIES = 15; // Maximum movies based on preferences
+  const MAX_RANDOM_MOVIES = 5; // Maximum random movies
 
-  const [movies, setMovies] = useState([]);
-  const [ratedMovies, setRatedMovies] = useState({});
-  const [ratingError, setRatingError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [ratingProgress, setRatingProgress] = useState(0);
-  const [newlyAddedMovie, setNewlyAddedMovie] = useState(null);
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
-  const location = useLocation();
+  // State variables
+  const [movies, setMovies] = useState([]); // List of movies to rate
+  const [ratedMovies, setRatedMovies] = useState({}); // Ratings for movies
+  const [ratingError, setRatingError] = useState(null); // Error message for rating
+  const [searchQuery, setSearchQuery] = useState(""); // Search query for movies
+  const [searchResults, setSearchResults] = useState([]); // Search results
+  const [isSearching, setIsSearching] = useState(false); // Search loading state
+  const [ratingProgress, setRatingProgress] = useState(0); // Progress of ratings
+  const [newlyAddedMovie, setNewlyAddedMovie] = useState(null); // Recently added movie for highlighting
+  const axiosPrivate = useAxiosPrivate(); // Axios instance for private requests
+  const navigate = useNavigate(); // Navigation hook
+  const location = useLocation(); // Location hook
 
-  // Rating progress tracking
+  // Track rating progress
   useEffect(() => {
-    setRatingProgress(Object.keys(ratedMovies).length);
+    setRatingProgress(Object.keys(ratedMovies).length); // Update progress based on rated movies
   }, [ratedMovies]);
 
-  // Initial movie loading
+  // Fetch initial movies
   useEffect(() => {
     const controller = new AbortController();
 
     const fetchMovies = async () => {
       try {
         const response = await axiosPrivate.get("/movies", {
-          signal: controller.signal,
+          signal: controller.signal, // Abort signal for cleanup
         });
         const updatedMovies = response.data.map((movie) => ({
           ...movie,
-          genres: formatGenres(movie.genres),
+          genres: formatGenres(movie.genres), // Format genres for display
         }));
-        setMovies(updatedMovies);
+        setMovies(updatedMovies); // Set movies state
       } catch (err) {
         if (err.response?.status === 401 || err.response?.status === 403) {
-          navigate("/login", { state: { from: location }, replace: true });
+          navigate("/login", { state: { from: location }, replace: true }); // Redirect to login on unauthorized access
         }
       }
     };
     fetchMovies();
 
     return () => {
-      controller.abort();
+      controller.abort(); // Cleanup abort controller
     };
   }, [axiosPrivate, navigate, location]);
 
-  // Movie search effect
+  // Search for movies based on query
   useEffect(() => {
     if (!searchQuery.trim() || searchQuery.length < 2) {
-      setSearchResults([]);
+      setSearchResults([]); // Clear results for invalid query
       return;
     }
 
     const timer = setTimeout(() => {
       const performSearch = async () => {
-        setIsSearching(true);
+        setIsSearching(true); // Set searching state
         try {
           const response = await axiosPrivate.get(
-            `/movies/search?query=${encodeURIComponent(searchQuery)}`
+            `/movies/search?query=${encodeURIComponent(searchQuery)}` // Search endpoint
           );
-          
           const formattedResults = response.data.map((movie) => ({
             ...movie,
-            genres: formatGenres(movie.genres),
-            isAlreadyAdded: movies.some((m) => m.movieid === movie.movieid)
+            genres: formatGenres(movie.genres), // Format genres for display
+            isAlreadyAdded: movies.some((m) => m.movieid === movie.movieid), // Check if movie is already added
           }));
-          
-          setSearchResults(formattedResults);
+          setSearchResults(formattedResults); // Update search results
         } catch (err) {
-          console.error("Error searching movies:", err);
+          console.error("Error searching movies:", err); // Log search errors
         } finally {
-          setIsSearching(false);
+          setIsSearching(false); // Reset searching state
         }
       };
 
       performSearch();
-    }, 400);
+    }, 400); // Debounce search query
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer); // Cleanup timer
   }, [searchQuery, axiosPrivate, movies]);
 
-  // Add CSS animation for highlighting
+  // Add CSS animation for highlighting newly added movies
   useEffect(() => {
     const style = document.createElement("style");
     style.textContent = `
@@ -110,41 +110,41 @@ const RateMovies = () => {
     document.head.appendChild(style);
 
     return () => {
-      document.head.removeChild(style);
+      document.head.removeChild(style); // Cleanup style element
     };
   }, []);
 
-  // Scroll to and highlight newly added movie
+  // Highlight and scroll to newly added movie
   useEffect(() => {
     if (newlyAddedMovie) {
       setTimeout(() => {
         const element = document.getElementById(`movie-${newlyAddedMovie}`);
         if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-          element.classList.add("movie-highlight");
+          element.scrollIntoView({ behavior: "smooth", block: "center" }); // Scroll to movie
+          element.classList.add("movie-highlight"); // Add highlight class
           setTimeout(() => {
-            element.classList.remove("movie-highlight");
-            setNewlyAddedMovie(null);
+            element.classList.remove("movie-highlight"); // Remove highlight class
+            setNewlyAddedMovie(null); // Reset newly added movie state
           }, 2000);
         }
       }, 100);
     }
   }, [newlyAddedMovie]);
 
-  // Optimize finding unrated movies
+  // Filter unrated movies
   const unratedMovies = useMemo(() => {
-    return movies.filter(movie => !ratedMovies[movie.movieid]);
+    return movies.filter(movie => !ratedMovies[movie.movieid]); // Filter movies without ratings
   }, [movies, ratedMovies]);
 
-  // Helper function to count movies by source type
+  // Count movies by source type
   const movieCountBySource = useMemo(() => {
     const counts = {
-      preference: 0,
-      random: 0,
-      preferenceRated: 0,
-      randomRated: 0
+      preference: 0, // Count of preference-based movies
+      random: 0, // Count of random movies
+      preferenceRated: 0, // Count of rated preference-based movies
+      randomRated: 0, // Count of rated random movies
     };
-    
+
     movies.forEach(movie => {
       if (movie.source === "preference") {
         counts.preference++;
@@ -154,8 +154,8 @@ const RateMovies = () => {
         if (ratedMovies[movie.movieid]) counts.randomRated++;
       }
     });
-    
-    return counts;
+
+    return counts; // Return counts
   }, [movies, ratedMovies]);
 
   // Add movie from search results
@@ -291,7 +291,7 @@ const RateMovies = () => {
 
   // Handle rating a movie
   const handleMovieRating = useCallback((movieId, rating) => {
-    setRatedMovies((prev) => ({ ...prev, [movieId]: rating }));
+    setRatedMovies((prev) => ({ ...prev, [movieId]: rating })); // Update rating state
   }, []);
 
   // Submit all ratings
@@ -328,12 +328,12 @@ const RateMovies = () => {
   }, [axiosPrivate, movies.length, ratingProgress, unratedMovies, ratedMovies, navigate]);
 
   return (
-    // Main container - add px-4 for padding on smaller screens
+    // Main container for the component
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex flex-col items-center py-10 px-4">
+      {/* Header */}
       <h1 className="text-3xl font-bold text-blue-600 mb-6">Ohodnoť filmy</h1>
 
       {/* Progress Bar */}
-      {/* Reduce max-width on very small screens */}
       <div className="w-full max-w-[95%] sm:max-w-4xl mb-6">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-gray-700">
@@ -351,7 +351,7 @@ const RateMovies = () => {
         </div>
       </div>
 
-      {/* Movie counts by type - optional */}
+      {/* Movie counts by type */}
       <div className="w-full max-w-[95%] sm:max-w-4xl mb-4">
         <div className="flex justify-between items-center">
           <div className="text-sm">
@@ -366,7 +366,6 @@ const RateMovies = () => {
       </div>
 
       {/* Search Box */}
-      {/* Search container - add more padding on small screens */}
       <div className="w-full max-w-[95%] sm:max-w-4xl bg-white p-4 sm:p-6 rounded-lg shadow-lg mb-6">
         <div className="flex gap-2 items-center">
           <input
@@ -457,7 +456,6 @@ const RateMovies = () => {
       </div>
 
       {/* Movie List */}
-      {/* Movies list container */}
       <div className="w-full max-w-[95%] sm:max-w-4xl bg-white p-4 sm:p-6 rounded-lg shadow-lg">
         {/* Movie list with better spacing */}
         <ul className="space-y-4">

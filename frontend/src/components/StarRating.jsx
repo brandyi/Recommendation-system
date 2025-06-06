@@ -1,22 +1,24 @@
 import { useState } from "react";
 
+// Component for star-based rating
 const StarRating = ({ totalStars = 5, onRatingChange }) => {
-  const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(0);
+  const [rating, setRating] = useState(0); // Current rating
+  const [hover, setHover] = useState(0); // Hover state for visual feedback
 
   return (
     <div className="flex space-x-1">
+      {/* Render stars dynamically based on totalStars */}
       {[...Array(totalStars)].map((_, index) => {
-        const starValue = index + 1;
+        const starValue = index + 1; // Star value starts from 1
         return (
           <button
             key={index}
             className={`text-2xl ${
               (hover || rating) >= starValue ? "text-yellow-400" : "text-gray-400"
-            }`}
-            onClick={() => {setRating(starValue); onRatingChange(starValue);}}
-            onMouseEnter={() => setHover(starValue)}
-            onMouseLeave={() => setHover(rating)}
+            }`} // Change color based on hover or rating
+            onClick={() => {setRating(starValue); onRatingChange(starValue);}} // Update rating and trigger callback
+            onMouseEnter={() => setHover(starValue)} // Set hover state
+            onMouseLeave={() => setHover(rating)} // Reset hover state
           >
             ★
           </button>

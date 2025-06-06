@@ -5,21 +5,22 @@ import useAuth from "../hooks/useAuth";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { FaTrash } from 'react-icons/fa';
 
+// Component for displaying and managing liked movies
 const LikedMovies = () => {
-  const [likedMovies, setLikedMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  const { auth } = useAuth();
-  const axiosPrivate = useAxiosPrivate();
-  
+  const [likedMovies, setLikedMovies] = useState([]); // State for liked movies
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
+  const navigate = useNavigate(); // Navigation hook
+  const { auth } = useAuth(); // Access authentication context
+  const axiosPrivate = useAxiosPrivate(); // Axios instance for private requests
+
   useEffect(() => {
     if (!auth?.accessToken) {
-      navigate('/login');
+      navigate('/login'); // Redirect to login if not authenticated
       return;
     }
     
-    fetchLikedMovies();
+    fetchLikedMovies(); // Fetch liked movies
   }, [auth, navigate]);
   
   const fetchLikedMovies = async () => {
@@ -27,22 +28,22 @@ const LikedMovies = () => {
     setError(null);
     
     try {
-      const response = await axiosPrivate.get('/movies/liked');
-      setLikedMovies(response.data);
+      const response = await axiosPrivate.get('/movies/liked'); // Fetch liked movies from backend
+      setLikedMovies(response.data); // Update state with liked movies
     } catch (err) {
-      console.error('Error fetching liked movies:', err);
-      setError('Error loading liked movies: ' + (err.response?.data?.message || err.message));
+      console.error('Error fetching liked movies:', err); // Log errors
+      setError('Error loading liked movies: ' + (err.response?.data?.message || err.message)); // Set error state
     } finally {
-      setLoading(false);
+      setLoading(false); // Reset loading state
     }
   };
   
   const handleUnlike = async (movieId) => {
     try {
-      await axiosPrivate.delete(`/movies/unlike/${movieId}`);
-      setLikedMovies(prev => prev.filter(movie => movie.movieId !== movieId));
+      await axiosPrivate.delete(`/movies/unlike/${movieId}`); // Remove movie from liked list
+      setLikedMovies(prev => prev.filter(movie => movie.movieId !== movieId)); // Update state
     } catch (err) {
-      console.error('Error unliking movie:', err);
+      console.error('Error unliking movie:', err); // Log errors
     }
   };
   

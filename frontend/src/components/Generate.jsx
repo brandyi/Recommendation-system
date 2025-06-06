@@ -1,9 +1,14 @@
-import { useState, useEffect} from "react";
+// Importing React hooks for state management and side effects
+import { useState, useEffect } from "react";
+// Importing navigation hook for redirecting users
 import { useNavigate } from "react-router-dom";
+// Importing components for UI
 import NavBar from "./Navbar";
 import MovieCard from "./MovieCard";
+// Importing custom hooks for authentication and Axios instance
 import useAuth from "../hooks/useAuth";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+// Importing icons for navigation buttons
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 // Helper function to shuffle an array
@@ -17,6 +22,7 @@ const shuffleArray = (array) => {
 };
 
 const Generate = () => {
+  // State variables for recommendations, indices, loading, and error handling
   const [ncfRecommendations, setNcfRecommendations] = useState([]);
   const [cfRecommendations, setCfRecommendations] = useState([]);
   const [ncfIndex, setNcfIndex] = useState(0);
@@ -24,13 +30,15 @@ const Generate = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hasVoted, setHasVoted] = useState(false);
-  const [ncfIsGroupA, setNcfIsGroupA] = useState(true); // Track which group is which
+  const [ncfIsGroupA, setNcfIsGroupA] = useState(true); // Track which group is assigned as Group A
 
+  // Hooks for navigation and authentication
   const navigate = useNavigate();
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
+    // Redirect to login if user is not authenticated
     if (!auth?.accessToken) {
       navigate("/login");
       return;
@@ -92,9 +100,11 @@ const Generate = () => {
 
   const syncLikedStatus = async (recommendations) => {
     try {
+      // Fetch liked movies from the backend
       const response = await axiosPrivate.get("/movies/liked");
       const likedMovieIds = response.data.map((movie) => movie.movieId);
 
+      // Update recommendations with liked status
       return recommendations.map((movie) => ({
         ...movie,
         isLiked: likedMovieIds.includes(movie.itemID),
@@ -107,7 +117,7 @@ const Generate = () => {
 
   const syncUserData = async (recommendations) => {
     try {
-      // Get liked movies
+      // Fetch liked movies and ratings from the backend
       const likedResponse = await axiosPrivate.get("/movies/liked");
       const likedMovieIds = likedResponse.data.map((movie) => movie.movieId);
       
@@ -151,9 +161,10 @@ const Generate = () => {
     setError(null);
 
     try {
+      // Fetch recommendations from the backend
       const response = await axiosPrivate.post("/recommendations");
       if (response.data) {
-        // Sync liked status with backend
+        // Sync liked status and shuffle recommendations
         const ncfWithLikes = await syncLikedStatus(
           response.data.ncf_recommendations
         );
@@ -186,6 +197,7 @@ const Generate = () => {
           JSON.stringify(shuffledCf)
         );
 
+        // Check if the user has already voted
         const response2 = await axiosPrivate.get("/feedback/voted");
         if (response2.data.voted === true) {
           localStorage.setItem(`${auth.user}_has_voted`, 'true');
@@ -207,12 +219,12 @@ const Generate = () => {
     }
   };
 
-  // Update the handleLikeMovie function to maintain local state
+  // Function to handle liking a movie
   const handleLikeMovie = async (movieId) => {
     try {
       await axiosPrivate.post(`/movies/like/${movieId}`);
 
-      // Update local state to reflect the like action
+      // Update local state and persist changes in localStorage
       setNcfRecommendations((prev) =>
         prev.map((movie) =>
           movie.itemID === movieId
@@ -256,7 +268,7 @@ const Generate = () => {
     }
   };
 
-  // Add/update the handleRateWatchLikelihood function
+  // Function to handle rating a movie's watch likelihood
   const handleRateWatchLikelihood = async (movieId, rating) => {
     try {
       // Check if this movie exists in each recommendation set
@@ -350,6 +362,7 @@ const Generate = () => {
     }
   };
 
+  // Functions to navigate through recommendations
   const handleNextNcfRecommendation = () => {
     if (ncfIndex < ncfRecommendations.length - 1) {
       setNcfIndex(ncfIndex + 1);
@@ -382,6 +395,7 @@ const Generate = () => {
     }
   };
 
+  // Function to handle preference selection between groups
   const handlePreferenceSelection = async (selectedGroup) => {
     try {
       const ncf_movies_ids = ncfRecommendations.map((movie) => movie.itemID);
@@ -391,7 +405,7 @@ const Generate = () => {
       const preferred = (selectedGroup === "A" && ncfIsGroupA) || 
                         (selectedGroup === "B" && !ncfIsGroupA) 
                         ? "ncf" : "cf";
-      
+
       await axiosPrivate.post("/feedback/algorithm-preference", {
         preferred_algorithm: preferred,
         ncf_movies_ids: ncf_movies_ids,
@@ -406,6 +420,7 @@ const Generate = () => {
     }
   };
 
+  // Determine current recommendations for each group
   const currentNcfRecommendation =
     ncfRecommendations.length > ncfIndex ? ncfRecommendations[ncfIndex] : null;
   const currentCfRecommendation =

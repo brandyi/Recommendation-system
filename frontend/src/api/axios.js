@@ -1,12 +1,16 @@
 import axios from 'axios';
-const baseURL = 'https://movie-rec-backend-722282028678.europe-central2.run.app';
 
+// Base URL for the API. Change this value if the backend server URL changes.
+const baseURL = 'http://localhost:8080/'; // Default is localhost:8080
+
+// Create a default axios instance for public requests
 export default axios.create({
-  baseURL: baseURL,
+  baseURL: baseURL, // Use the base URL for all requests
 });
 
+// Create a private axios instance for authenticated requests
 export const axiosPrivate = axios.create({
-  baseURL: baseURL,
-  headers: {'Content-Type': 'application/json'},
-  withCredentials: true,
+  baseURL: baseURL, // Use the base URL for all requests
+  headers: {'Content-Type': 'application/json'}, // Set default headers
+  withCredentials: true, // Include credentials for cross-origin requests
 });
