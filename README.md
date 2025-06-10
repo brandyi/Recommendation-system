@@ -74,3 +74,7 @@ Pred inštaláciou je potrebné mať nainštalované:
 6. **Prístup k aplikácii**  
    Po spustení frontend servera (`npm run dev`) otvorte adresu, ktorú vám poskytne terminál, napríklad `http://localhost:3000`.
 
+   > **Poznámka:** Ak aplikácia nefunguje správne, môže byť problém v tom, že adresa frontend servera nie je uvedená vo `whitelist` v súbore `allowedOrigins.js` na backende. Skontrolujte tento súbor a pridajte adresu frontend servera do zoznamu povolených adries.
+
+
+
