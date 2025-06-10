@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import axios from "axios";
+import dotenv from "dotenv";
+
+dotenv.config(); // Load environment variables from .env file
 
 const API_TOKEN = process.env.VITE_TMDB_API_TOKEN;
 
