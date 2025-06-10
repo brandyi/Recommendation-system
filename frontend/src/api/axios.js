@@ -1,9 +1,6 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables from .env file
-// Base URL for the API. Change this value in the environment variables if needed.
-const baseURL = process.env.VITE_BACKEND_URL; // Default is localhost:8080
+const baseURL = import.meta.env.VITE_BACKEND_URL; // Default is localhost:8080
 
 // Create a default axios instance for public requests
 export default axios.create({
